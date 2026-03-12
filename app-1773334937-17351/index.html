@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-br"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>app AUTO: agenda + clientes + serviços</title>
+<style>
+body{font-family:system-ui;margin:0;background:#0b0b10;color:#f6f6ff}
+.wrap{max-width:980px;margin:0 auto;padding:22px}
+.card{background:#141425;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin:12px 0}
+input,button{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#0f0f1c;color:#fff}
+button{cursor:pointer;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.small{opacity:.7;font-size:13px}
+</style></head><body>
+<div class="wrap">
+<h1>app AUTO: agenda + clientes + serviços</h1><div class="small">App simples offline (LocalStorage).</div>
+<div class="grid">
+  <div class="card">
+    <h3>Clientes</h3>
+    <input id="cname" placeholder="Nome do cliente"/>
+    <button onclick="addClient()">Adicionar</button>
+    <ul id="clist"></ul>
+  </div>
+  <div class="card">
+    <h3>Agenda</h3>
+    <input id="adate" type="datetime-local"/>
+    <input id="adesc" placeholder="Serviço (ex: Corte + Escova)"/>
+    <button onclick="addAppt()">Agendar</button>
+    <ul id="alist"></ul>
+  </div>
+</div></div>
+<script>
+const db={clients:JSON.parse(localStorage.getItem("clients")||"[]"),
+appts:JSON.parse(localStorage.getItem("appts")||"[]")};
+function save(){localStorage.setItem("clients",JSON.stringify(db.clients));
+localStorage.setItem("appts",JSON.stringify(db.appts));}
+function render(){clist.innerHTML=db.clients.map((c,i)=>`<li>${c} <button onclick="delClient(${i})">x</button></li>`).join("");
+alist.innerHTML=db.appts.map((a,i)=>`<li><b>${a.date}</b> — ${a.desc} <button onclick="delAppt(${i})">x</button></li>`).join("");}
+function addClient(){const v=cname.value.trim();if(!v)return;db.clients.push(v);cname.value="";save();render();}
+function delClient(i){db.clients.splice(i,1);save();render();}
+function addAppt(){const d=adate.value;const s=adesc.value.trim();if(!d||!s)return;db.appts.push({date:d,desc:s});adate.value="";adesc.value="";save();render();}
+function delAppt(i){db.appts.splice(i,1);save();render();}
+render();
+</script></body></html>
