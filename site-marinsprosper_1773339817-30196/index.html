@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Marinsprosper — Câmbio P2P, simples e seguro</title>
+  <style>
+    :root{
+      --bg:#0b0b10; --card:#12121a; --muted:#a8a8b3; --text:#f4f4f8;
+      --pink:#ff3ea5; --pink2:#ff6cc0; --line:#242432; --ok:#2dd4bf; --warn:#fbbf24; --bad:#fb7185;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);background:radial-gradient(1200px 700px at 20% 10%, rgba(255,62,165,.22), transparent 55%),
+         radial-gradient(900px 600px at 90% 20%, rgba(45,212,191,.16), transparent 55%), var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1180px;margin:0 auto;padding:22px}
+    .topbar{position:sticky;top:0;z-index:9;background:rgba(11,11,16,.78);backdrop-filter: blur(10px);border-bottom:1px solid var(--line)}
+    .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pink),#7c3aed);box-shadow:var(--shadow)}
+    .nav{display:flex;gap:12px;flex-wrap:wrap}
+    .pill{padding:10px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(18,18,26,.7)}
+    .pill:hover{border-color:rgba(255,62,165,.6)}
+    .cta{padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,var(--pink),var(--pink2));color:#140012;font-weight:800}
+    .hero{padding:34px 0 18px}
+    .grid{display:grid;gap:16px}
+    .heroGrid{grid-template-columns: 1.25fr .75fr}
+    @media(max-width:980px){.heroGrid{grid-template-columns:1fr}}
+    .card{background:rgba(18,18,26,.85);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+    .card .in{padding:18px}
+    h1{margin:0 0 10px;font-size:42px;line-height:1.05}
+    @media(max-width:520px){h1{font-size:34px}}
+    .sub{color:var(--muted);font-size:16px;line-height:1.5;margin:0 0 18px}
+    .kpi{display:flex;gap:10px;flex-wrap:wrap}
+    .kpi .chip{padding:8px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:rgba(0,0,0,.18)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{cursor:pointer;border:0}
+    .btn2{padding:11px 14px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid var(--line);color:var(--text)}
+    .btn2:hover{border-color:rgba(45,212,191,.45)}
+    .sectionTitle{font-size:18px;margin:0 0 10px}
+    .muted{color:var(--muted)}
+    .cols3{grid-template-columns:repeat(3,1fr)}
+    @media(max-width:980px){.cols3{grid-template-columns:1fr}}
+    .list{display:grid;gap:10px}
+    .item{padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.16)}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+    .dot{width:8px;height:8px;border-radius:999px;background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.bad{background:var(--bad)}
+    .appShell{display:grid;grid-template-columns:260px 1fr;gap:14px}
+    @media(max-width:980px){.appShell{grid-template-columns:1fr}}
+    .side{padding:14px}
+    .side h3{margin:0 0 10px}
+    .menu{display:grid;gap:8px}
+    .menu button{width:100%;text-align:left}
+    .main{padding:14px}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;color:var(--muted)}
+    .table th{color:var(--text);background:rgba(0,0,0,.22)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:980px){.two{grid-template-columns:1fr}}
+    .field{display:grid;gap:6px}
+    input,select,textarea{
+      width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);color:var(--text);outline:none
+    }
+    textarea{min-height:90px;resize:vertical}
+    .footer{padding:22px 0 40px;color:var(--muted);font-size:13px}
+    .hr{height:1px;background:var(--line);margin:16px 0}
+    .tiny{font-size:12px;color:var(--muted)}
+    .right{display:flex;justify-content:flex-end}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>Marinsprosper</div>
+      </div>
+      <div class="nav">
+        <a class="pill" href="#/">Home</a>
+        <a class="pill" href="#/app">MVP (App Web)</a>
+        <a class="pill" href="#/docs">Especificação</a>
+        <a class="cta" href="#/app">Abrir protótipo</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="root"></div>
+
+  <div class="wrap footer">
+    <div class="hr"></div>
+    <div class="row" style="justify-content:space-between">
+      <div>© <span id="year"></span> Marinsprosper — “Câmbio P2P, simples e seguro.”</div>
+      <div class="tiny">MVP offline (mock). Pronto para evoluir para Supabase/Firebase/API.</div>
+    </div>
+  </div>
+
+<script>
+  const elRoot = document.getElementById("root");
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const db = {
+    users: [
+      {id:"u_admin",  email:"admin@marinsprosper.local",  role:"admin",  status:"approved", ratingAvg:5, ratingCount:1},
+      {id:"u_cashier",email:"cashier@marinsprosper.local",role:"cashier",status:"approved", ratingAvg:4.9, ratingCount:42, collateralUsd:100, exposureActive:0},
+      {id:"u_client", email:"client@marinsprosper.local", role:"client", status:"approved", ratingAvg:4.8, ratingCount:12},
+    ],
+    config: { platformPct:0.5, clientPaysCashierPct:3.0, clientReceivesPct:2.5, collateralFactor:0.5 },
+    orders: [],
+    chat: [],
+    ratings: [],
+    audit: []
+  };
+
+  const STATUS = {
+    created:"created",
+    accepted:"accepted",
+    paid:"paid_by_first_party",
+    completed:"completed",
+    cancel_requested:"cancel_requested",
+    cancel_refused:"cancel_refused",
+    dispute:"dispute",
+    resolved:"resolved",
+  };
+
+  function mount(html){ elRoot.innerHTML = html; }
+  function money(n){ return (Number(n)||0).toFixed(2); }
+  function audit(action, meta){ db.audit.unshift({at:new Date().toISOString(), action, meta}); }
+
+  function calcCashierLimit(cashier){
+    const factor = db.config.collateralFactor;
+    const total = Number(cashier.collateralUsd||0);
+    const active = Number(cashier.exposureActive||0);
+    return Math.max(0, (total*factor) - active);
+  }
+
+  function home(){
+    return `
+    <div class="wrap hero">
+      <div class="grid heroGrid">
+        <div class="card"><div class="in">
+          <h1>Câmbio P2P, simples e seguro.</h1>
+          <p class="sub">Protótipo MVP “app-like” para o fluxo completo: ordens, caução, chat, cancelamento, disputa, reputação e admin.</p>
+          <div class="row">
+            <a class="cta" href="#/app">Abrir o MVP</a>
+            <a class="btn2" href="#/docs">Ver especificação</a>
+          </div>
+          <div class="hr"></div>
+          <div class="kpi">
+            <span class="chip">Cliente envia primeiro</span>
+            <span class="chip">Caixeiro limitado por caução</span>
+            <span class="chip">Chat por ordem</span>
+            <span class="chip">Disputa com admin</span>
+          </div>
+        </div></div>
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Rotas MVP</b></div>
+          <div class="list" style="margin-top:10px">
+            <div class="item"><b>#/login</b><div class="tiny">Login mock + seeds</div></div>
+            <div class="item"><b>#/register</b><div class="tiny">Cadastro pending → admin aprova</div></div>
+            <div class="item"><b>#/client</b><div class="tiny">Criar e ver ordens</div></div>
+            <div class="item"><b>#/cashier</b><div class="tiny">Aceitar por limite da caução</div></div>
+            <div class="item"><b>#/admin</b><div class="tiny">Taxas, aprovação, auditoria</div></div>
+          </div>
+        </div></div>
+      </div>
+    </div>`;
+  }
+
+  function docs(){
+    return `
+    <div class="wrap hero">
+      <div class="card"><div class="in">
+        <h2 class="sectionTitle">Especificação</h2>
+        <p class="sub">O arquivo completo está junto do site como <b>SPEC.md</b> na mesma publicação.</p>
+        <div class="row">
+          <span class="badge"><span class="dot"></span> Estados: created → accepted → paid → completed</span>
+          <span class="badge"><span class="dot warn"></span> cancel_requested / dispute → resolved</span>
+        </div>
+        <div class="hr"></div>
+        <a class="cta" href="#/app">Abrir MVP</a>
+      </div></div>
+    </div>`;
+  }
+
+  function appShell(){
+    return `
+    <div class="wrap hero">
+      <div class="grid appShell">
+        <div class="card"><div class="side">
+          <h3 style="margin:0 0 6px">MVP (offline)</h3>
+          <div class="tiny">SPA com sensação de app • dados mock • pronto p/ backend real</div>
+          <div class="hr"></div>
+          <div class="menu">
+            <button class="btn2" data-go="#/login">/login</button>
+            <button class="btn2" data-go="#/register">/register</button>
+            <button class="btn2" data-go="#/client">/client</button>
+            <button class="btn2" data-go="#/cashier">/cashier</button>
+            <button class="btn2" data-go="#/admin">/admin</button>
+          </div>
+          <div class="hr"></div>
+          <div class="badge"><span class="dot"></span><b>Config</b></div>
+          <div class="tiny" style="margin-top:8px">
+            platformPct: <b>${db.config.platformPct}%</b><br/>
+            clientPaysCashierPct: <b>${db.config.clientPaysCashierPct}%</b><br/>
+            clientReceivesPct: <b>${db.config.clientReceivesPct}%</b><br/>
+            collateralFactor: <b>${db.config.collateralFactor}</b>
+          </div>
+        </div></div>
+        <div class="card"><div class="main" id="appView"></div></div>
+      </div>
+    </div>`;
+  }
+
+  function ordersTable(rows, mode){
+    if(!rows.length) return `<div class="tiny">Nenhuma ordem aqui ainda.</div>`;
+    return `
+      <table class="table">
+        <thead><tr><th>ID</th><th>Status</th><th>Lado</th><th>Valor</th><th>Ação</th></tr></thead>
+        <tbody>
+          ${rows.map(o=>`
+            <tr>
+              <td>${o.id}</td>
+              <td>${o.status}</td>
+              <td>${o.side}</td>
+              <td>$${money(o.amountUsd)}</td>
+              <td>
+                ${mode==="available"
+                  ? `<button class="btn2" data-accept="${o.id}">Aceitar</button>`
+                  : `<a class="btn2" href="#/order/${o.id}">Abrir</a>`
+                }
+              </td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+  }
+
+  function clientView(){
+    const rows = db.orders.filter(o=>o.clientId==="u_client");
+    return `
+      <h2 class="sectionTitle">Cliente</h2>
+      <div class="two">
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Criar ordem</b></div>
+          <div class="two" style="margin-top:10px">
+            <div class="field"><label class="muted">Lado</label>
+              <select id="side"><option value="buy">Compra USDT</option><option value="sell">Venda USDT</option></select>
+            </div>
+            <div class="field"><label class="muted">Valor (USD)</label>
+              <input id="amount" type="number" min="1" step="1" value="50"/>
+            </div>
+          </div>
+          <div class="two" style="margin-top:10px">
+            <div class="field"><label class="muted">Rede</label>
+              <select id="network"><option>TRC20</option><option>ERC20</option><option>BEP20</option></select>
+            </div>
+            <div class="field"><label class="muted">Método</label>
+              <select id="pm"><option>PIX</option><option>Wise</option><option>Transferência</option></select>
+            </div>
+          </div>
+          <div class="right" style="margin-top:10px">
+            <button class="cta btn" id="createOrder">Criar</button>
+          </div>
+          <div class="tiny">Status inicial: <b>created</b> (fila disponível).</div>
+        </div></div>
+
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Minhas ordens</b></div>
+          <div style="margin-top:10px;overflow:auto">
+            ${ordersTable(rows, "mine")}
+          </div>
+        </div></div>
+      </div>`;
+  }
+
+  function cashierView(){
+    const cashier = db.users.find(u=>u.role==="cashier");
+    const limit = calcCashierLimit(cashier);
+    const available = db.orders.filter(o=>o.status===STATUS.created);
+    const mine = db.orders.filter(o=>o.cashierId===cashier.id);
+    return `
+      <h2 class="sectionTitle">Caixeiro</h2>
+      <div class="two">
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Caução & Limite</b></div>
+          <div class="list" style="margin-top:10px">
+            <div class="item"><b>Caução</b><div class="muted">$${money(cashier.collateralUsd)}</div></div>
+            <div class="item"><b>Exposição ativa</b><div class="muted">$${money(cashier.exposureActive)}</div></div>
+            <div class="item"><b>Limite disponível</b><div class="muted">$${money(limit)}</div></div>
+          </div>
+          <div class="tiny" style="margin-top:8px">limite = caução * fator − exposição ativa</div>
+        </div></div>
+
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Ordens disponíveis</b></div>
+          <div style="margin-top:10px;overflow:auto">
+            ${ordersTable(available, "available")}
+          </div>
+        </div></div>
+      </div>
+
+      <div class="card" style="margin-top:12px"><div class="in">
+        <div class="badge"><span class="dot"></span><b>Minhas ordens</b></div>
+        <div style="margin-top:10px;overflow:auto">
+          ${ordersTable(mine, "mine")}
+        </div>
+      </div></div>`;
+  }
+
+  function adminView(){
+    return `
+      <h2 class="sectionTitle">Admin</h2>
+      <div class="two">
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Taxas (parametrizadas)</b></div>
+          <div class="two" style="margin-top:10px">
+            <div class="field"><label class="muted">platformPct (%)</label><input id="platformPct" type="number" step="0.1" value="${db.config.platformPct}"></div>
+            <div class="field"><label class="muted">collateralFactor</label><input id="collateralFactor" type="number" step="0.05" value="${db.config.collateralFactor}"></div>
+          </div>
+          <div class="two" style="margin-top:10px">
+            <div class="field"><label class="muted">clientPaysCashierPct (%)</label><input id="clientPaysCashierPct" type="number" step="0.1" value="${db.config.clientPaysCashierPct}"></div>
+            <div class="field"><label class="muted">clientReceivesPct (%)</label><input id="clientReceivesPct" type="number" step="0.1" value="${db.config.clientReceivesPct}"></div>
+          </div>
+          <div class="right" style="margin-top:10px"><button class="cta btn" id="saveCfg">Salvar</button></div>
+        </div></div>
+
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Auditoria</b></div>
+          <div style="margin-top:10px;overflow:auto;max-height:260px">
+            <table class="table">
+              <thead><tr><th>At</th><th>Ação</th></tr></thead>
+              <tbody>
+                ${db.audit.slice(0,60).map(a=>`<tr><td>${a.at}</td><td>${a.action}</td></tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div></div>
+      </div>`;
+  }
+
+  function orderView(id){
+    const o = db.orders.find(x=>x.id===id);
+    if(!o) return `<div class="badge"><span class="dot bad"></span><b>Ordem não encontrada</b></div>`;
+
+    const canClientPay = o.status===STATUS.accepted;
+    const canCashierComplete = o.status===STATUS.paid;
+    const cancelPending = o.status===STATUS.cancel_requested;
+
+    return `
+      <h2 class="sectionTitle">Ordem ${o.id}</h2>
+      <div class="row">
+        <span class="badge"><span class="dot"></span><b>Status:</b> ${o.status}</span>
+        <span class="badge"><span class="dot"></span><b>Lado:</b> ${o.side}</span>
+        <span class="badge"><span class="dot"></span><b>Valor:</b> $${money(o.amountUsd)}</span>
+        <span class="badge"><span class="dot"></span><b>Rede:</b> ${o.network}</span>
+        <span class="badge"><span class="dot"></span><b>Método:</b> ${o.paymentMethod}</span>
+      </div>
+
+      <div class="two" style="margin-top:12px">
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Ações</b></div>
+
+          <div class="field" style="margin-top:10px">
+            <label class="muted">Comprovante / TXID</label>
+            <textarea id="proof">${o.proofText||""}</textarea>
+            <div class="right" style="margin-top:8px"><button class="btn2" id="saveProof">Salvar</button></div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="cta btn" id="markPaid" ${canClientPay?"":"disabled"}>Cliente: marcar pago/enviado</button>
+            <button class="cta btn" id="complete" ${canCashierComplete?"":"disabled"}>Caixeiro: concluir</button>
+          </div>
+
+          <div class="hr"></div>
+          <div class="badge"><span class="dot warn"></span><b>Cancelamento</b></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn2" id="reqCancel" ${o.status===STATUS.completed?"disabled":""}>Solicitar</button>
+            <button class="btn2" id="acceptCancel" ${cancelPending?"":"disabled"}>Aceitar</button>
+            <button class="btn2" id="refuseCancel" ${cancelPending?"":"disabled"}>Recusar → disputa</button>
+          </div>
+
+          <div class="hr"></div>
+          <div class="badge"><span class="dot"></span><b>Chat</b></div>
+          <div id="chatBox" style="margin-top:10px;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(0,0,0,.14)"></div>
+          <div class="row" style="margin-top:10px">
+            <input id="msg" placeholder="Mensagem..."/>
+            <button class="cta btn" id="sendMsg">Enviar</button>
+          </div>
+        </div></div>
+
+        <div class="card"><div class="in">
+          <div class="badge"><span class="dot"></span><b>Admin / Auditoria</b></div>
+          <p class="tiny" style="margin-top:10px">No MVP: admin vê tudo, ajusta taxas, resolve disputas e mantém trilha de auditoria.</p>
+          <div class="hr"></div>
+          <a class="btn2" href="#/admin">Abrir Admin</a>
+        </div></div>
+      </div>`;
+  }
+
+  function renderApp(route){
+    mount(appShell());
+    document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
+    const view = document.getElementById("appView");
+
+    const sub = route.replace("#/","");
+
+    if(sub==="client"){
+      view.innerHTML = clientView();
+      document.getElementById("createOrder").onclick=()=>{
+        const side=document.getElementById("side").value;
+        const amount=Number(document.getElementById("amount").value||0);
+        const network=document.getElementById("network").value;
+        const pm=document.getElementById("pm").value;
+        const id="O-"+String(Date.now()).slice(-7);
+        const o={id, side, amountUsd:amount, network, paymentMethod:pm, clientId:"u_client", cashierId:null, status:STATUS.created, proofText:""};
+        db.orders.unshift(o);
+        audit("order_created",{id});
+        location.hash="#/cashier";
+      };
+      return;
+    }
+
+    if(sub==="cashier"){
+      view.innerHTML = cashierView();
+      document.querySelectorAll("[data-accept]").forEach(b=>{
+        b.onclick=()=>{
+          const o=db.orders.find(x=>x.id===b.dataset.accept);
+          const cashier=db.users.find(u=>u.role==="cashier");
+          const limit=calcCashierLimit(cashier);
+          if(Number(o.amountUsd)>limit){
+            audit("cashier_accept_denied",{order:o.id, limit});
+            alert("Limite insuficiente pela caução.");
+            return;
+          }
+          o.cashierId=cashier.id;
+          o.status=STATUS.accepted;
+          cashier.exposureActive += Number(o.amountUsd||0);
+          audit("order_accepted",{order:o.id});
+          location.hash="#/order/"+o.id;
+        };
+      });
+      return;
+    }
+
+    if(sub==="admin"){
+      view.innerHTML = adminView();
+      document.getElementById("saveCfg").onclick=()=>{
+        db.config.platformPct=Number(document.getElementById("platformPct").value);
+        db.config.collateralFactor=Number(document.getElementById("collateralFactor").value);
+        db.config.clientPaysCashierPct=Number(document.getElementById("clientPaysCashierPct").value);
+        db.config.clientReceivesPct=Number(document.getElementById("clientReceivesPct").value);
+        audit("config_updated",{...db.config});
+        location.hash="#/admin";
+      };
+      return;
+    }
+
+    if(sub.startsWith("order/")){
+      const id=sub.split("/")[1];
+      view.innerHTML = orderView(id);
+      const o=db.orders.find(x=>x.id===id);
+
+      function renderChat(){
+        const box=document.getElementById("chatBox");
+        const msgs=db.chat.filter(m=>m.orderId===id).slice(-50);
+        box.innerHTML = msgs.map(m=>`<div class="item"><div class="tiny"><b>${m.sender}</b> • ${m.at}</div>${m.text}</div>`).join("") || `<div class="tiny">Sem mensagens.</div>`;
+        box.scrollTop = box.scrollHeight;
+      }
+      renderChat();
+
+      document.getElementById("sendMsg").onclick=()=>{
+        const text=document.getElementById("msg").value.trim();
+        if(!text) return;
+        db.chat.push({orderId:id, at:new Date().toISOString(), sender:"client", text});
+        audit("chat_message",{order:id});
+        document.getElementById("msg").value="";
+        renderChat();
+      };
+
+      document.getElementById("saveProof").onclick=()=>{
+        o.proofText=document.getElementById("proof").value;
+        audit("proof_saved",{order:id});
+        alert("Prova/TXID salvo.");
+      };
+
+      document.getElementById("markPaid").onclick=()=>{
+        if(o.status!==STATUS.accepted) return;
+        o.status=STATUS.paid;
+        audit("client_marked_paid",{order:id});
+        location.hash="#/order/"+id;
+      };
+
+      document.getElementById("complete").onclick=()=>{
+        if(o.status!==STATUS.paid) return;
+        o.status=STATUS.completed;
+        const cashier=db.users.find(u=>u.role==="cashier");
+        cashier.exposureActive = Math.max(0, cashier.exposureActive - Number(o.amountUsd||0));
+        audit("order_completed",{order:id});
+        location.hash="#/order/"+id;
+      };
+
+      document.getElementById("reqCancel").onclick=()=>{
+        if(o.status===STATUS.completed) return;
+        o.status=STATUS.cancel_requested;
+        audit("cancel_requested",{order:id});
+        location.hash="#/order/"+id;
+      };
+
+      document.getElementById("acceptCancel").onclick=()=>{
+        if(o.status!==STATUS.cancel_requested) return;
+        o.status=STATUS.resolved;
+        const cashier=db.users.find(u=>u.role==="cashier");
+        cashier.exposureActive = Math.max(0, cashier.exposureActive - Number(o.amountUsd||0));
+        audit("cancel_accepted",{order:id});
+        location.hash="#/order/"+id;
+      };
+
+      document.getElementById("refuseCancel").onclick=()=>{
+        if(o.status!==STATUS.cancel_requested) return;
+        o.status=STATUS.dispute;
+        audit("cancel_refused_to_dispute",{order:id});
+        location.hash="#/order/"+id;
+      };
+
+      return;
+    }
+
+    view.innerHTML = `<div class="badge"><span class="dot warn"></span><b>Escolha uma seção</b></div>`;
+  }
+
+  function render(){
+    const h = location.hash || "#/";
+    if(h==="#/" || h==="#"){ mount(home()); return; }
+    if(h==="#/docs"){ mount(docs()); return; }
+    if(h.startsWith("#/app") || h.startsWith("#/client") || h.startsWith("#/cashier") || h.startsWith("#/admin") || h.startsWith("#/order/")){
+      renderApp(h);
+      return;
+    }
+    mount(home());
+  }
+
+  window.addEventListener("hashchange", render);
+  render();
+</script>
+</body>
+</html>
